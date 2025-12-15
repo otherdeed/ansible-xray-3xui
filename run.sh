@@ -63,7 +63,7 @@ cat > install.yml << EOF_YAML
         url: https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh
         dest: /tmp/install-3x-ui.sh
         mode: '0755'
-      when: install_3xui
+      when: install_3xui | bool
 
     - name: Install 3x-ui
       shell: |
@@ -71,12 +71,12 @@ cat > install.yml << EOF_YAML
       args:
         executable: /bin/bash
       register: install_output
-      when: install_3xui
+      when: install_3xui | bool
 
     - name: Remove ANSI color codes from 3x-ui output
       set_fact:
         clean_output: "{{ install_output.stdout | replace('\x1b', '') | replace('\033', '') }}"
-      when: install_3xui
+      when: install_3xui | bool
 
     - name: Extract 3x-ui credentials
       set_fact:
@@ -86,7 +86,7 @@ cat > install.yml << EOF_YAML
         xui_port_result: "{{ clean_output | regex_search('Port: ([0-9]+)', '\\\\1') | default('UNKNOWN') }}"
         xui_web_path: "{{ clean_output | regex_search('WebBasePath: ([^\\\\s]+)', '\\\\1') | default('/') }}"
         xui_access_url: "{{ clean_output | regex_search('Access URL: ([^\\\\s]+)', '\\\\1') | default('UNKNOWN') }}"
-      when: install_3xui
+      when: install_3xui | bool
 
     # НОВАЯ ЗАДАЧА: Сохранить переменные для последующего извлечения через файл
     - name: Save 3x-ui facts to a local file
@@ -102,7 +102,7 @@ cat > install.yml << EOF_YAML
         dest: /tmp/ansible_3xui_facts.json
       delegate_to: localhost
       run_once: true
-      when: install_3xui
+      when: install_3xui | bool
 
 
     - name: Create XRAY configuration directory
@@ -110,26 +110,26 @@ cat > install.yml << EOF_YAML
         path: "{{ xray_config_dir }}"
         state: directory
         mode: "0755"
-      when: install_xray
+      when: install_xray | bool
 
     - name: Install XRAY using official script
       shell: |
         curl -L https://raw.githubusercontent.com/XTLS/Xray-install/master/install-release.sh | bash -s -- install
       args:
         creates: "{{ xray_install_dir }}/xray"
-      when: install_xray
+      when: install_xray | bool
 
     - name: Verify XRAY binary exists
       stat:
         path: "{{ xray_install_dir }}/xray"
       register: xray_bin
-      when: install_xray
+      when: install_xray | bool
 
     - name: Fail if XRAY installation failed
       fail:
         msg: "XRAY installation failed!"
       when:
-        - install_xray
+        - install_xray | bool
         - not xray_bin.stat.exists
 
     - name: Create XRAY config file
@@ -155,7 +155,7 @@ cat > install.yml << EOF_YAML
               }
             ]
           }
-      when: install_xray
+      when: install_xray | bool
 
     - name: Create XRAY systemd service
       copy:
@@ -172,19 +172,19 @@ cat > install.yml << EOF_YAML
 
           [Install]
           WantedBy=multi-user.target
-      when: install_xray
+      when: install_xray | bool
 
     - name: Reload systemd
       systemd:
         daemon_reload: yes
-      when: install_xray
+      when: install_xray | bool
 
     - name: Enable and start XRAY
       systemd:
         name: xray
         enabled: yes
         state: started
-      when: install_xray
+      when: install_xray | bool
 EOF_YAML
 
 # --- 3. УСТАНОВКА ЗАВИСИМОСТЕЙ И ЗАПУСК ---

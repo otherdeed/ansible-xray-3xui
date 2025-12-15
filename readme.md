@@ -15,12 +15,12 @@
 
 Для запуска скрипта необходимо установить следующие зависимости.
 
-| Инструмент | Команда для установки (Debian/Ubuntu) | Назначение |
-| :--- | :--- | :--- |
-| **`Ansible`** | `pip3 install ansible` | Система управления конфигурацией. |
-| **`sshpass`** | `sudo apt install sshpass` | **Критически важно!** Для передачи пароля SSH в неинтерактивном режиме. |
-| **`jq`** | `sudo apt install jq` | **Рекомендуется!** Для форматированного извлечения учетных данных из JSON. |
-| **`community.general`** | `sudo ansible-galaxy collection install community.general` | Коллекция Ansible, необходимая для общесистемных задач. |
+| Инструмент | Команда для установки (Debian/Ubuntu)                                        | Назначение |
+| :--- |:-----------------------------------------------------------------------------| :--- |
+| **`Ansible`** | `pip3 install ansible`                                                       | Система управления конфигурацией. |
+| **`sshpass`** | `sudo apt install sshpass`<br/>(macOS `brew install sshpass`)                                    | **Критически важно!** Для передачи пароля SSH в неинтерактивном режиме. |
+| **`jq`** | `sudo apt install jq`<br/>(macOS `brew install jq`)                                                        | **Рекомендуется!** Для форматированного извлечения учетных данных из JSON. |
+| **`community.general`** | `sudo ansible-galaxy collection install community.general`                   | Коллекция Ansible, необходимая для общесистемных задач. |
 
 ### 2. Удаленный VPS
 
